@@ -1,0 +1,30 @@
+name: Deploy CFAE App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.CFAE_DEPLOY_KEY }}" > ~/.ssh/cfae_deploy_key
+          chmod 600 ~/.ssh/cfae_deploy_key
+
+          echo "Host cfae-vm
+            HostName 129.80.115.29
+            User opc
+            IdentityFile ~/.ssh/cfae_deploy_key
+            StrictHostKeyChecking no" >> ~/.ssh/config
+
+      - name: Deploy to VM
+        run: |
+          ssh cfae-vm "cd /home/opc/cfae-app && git pull"
