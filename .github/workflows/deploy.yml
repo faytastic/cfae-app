@@ -27,4 +27,8 @@ jobs:
 
       - name: Deploy to VM
         run: |
-          ssh cfae-vm "cd /home/opc/cfae-app && git pull"
+          ssh cfae-vm "
+            cd /home/opc/cfae-app &&
+            git pull &&
+            sudo cp -r /home/opc/cfae-app/* /var/www/cfae/
+          "
