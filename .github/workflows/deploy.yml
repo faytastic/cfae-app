@@ -64,7 +64,9 @@ jobs:
             git fetch origin &&
             git checkout main &&
             git reset --hard origin/main &&
+
+            SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+            sed -i 's/BUILD_VERSION/'\"$SHORT_SHA\"'/' index.html &&
+
             sudo cp -r /home/opc/cfae-app/* /var/www/cfae/
           "
-
-
