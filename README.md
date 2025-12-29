@@ -13,11 +13,12 @@ The code is stored in GitHub and deployed automatically using a CI/CD pipeline.
 
 Deployment is fully automated.
 
+This pipeline prevents broken or incomplete code from being deployed.
+
 When code is pushed to the `main` branch:
 
 1. GitHub Actions starts the CI/CD workflow.
-2. A `check` job runs first and validates that the project structure is safe to deploy 
-   (for example, confirming required files exist).
+2. A `check` job runs first and validates that the project structure is safe to deploy (for example, confirming required files exist).
 3. If the check passes, the `deploy` job connects securely to the OCI virtual machine.
 4. The VM pulls the latest code from this repository.
 5. Updated files are copied into the web directory served by Nginx: `/var/www/cfae`
@@ -26,8 +27,9 @@ The pipeline runs on a temporary GitHub-hosted Linux runner and does not require
 
 If the check fails, deployment stops and nothing is changed on the server.
 
-
 Normal deployments do **not** require manual SSH.
+
+Manual SSH should only be used for troubleshooting.
 
 ---
 
@@ -40,6 +42,29 @@ Normal deployments do **not** require manual SSH.
 - If validation fails, **deployment is blocked** and the server is not changed
 - This protects the production site from accidental breaking changes and ensures that only valid builds are deployed.
 
+---
+
+## 🔢 Versioning
+
+This project uses a simple version file to track releases.
+
+The version is also displayed at the bottom of the live webpage.
+
+- The current version is stored in a file called `VERSION`
+- The CI/CD pipeline reads this value and replaces `BUILD_VERSION` in `index.html`
+- Whatever is in the `VERSION` file becomes the live version on the site
+
+Example: `1.0.0`
+
+### When to update the version
+
+Update the `VERSION` file only when you intend to make a new release:
+
+- `1.0.1` small bug fix  
+- `1.1.0` new feature  
+- `2.0.0` major change  
+
+Small commits that don’t change behavior don’t require a version bump.
 
 ---
 
@@ -75,12 +100,13 @@ Nginx only serves files from the web root.
 
 If the pipeline fails and a fix is needed temporarily, you can deploy manually from the VM:
 
-    cd ~/cfae-app
-    git pull
-    sudo cp -r ~/cfae-app/* /var/www/cfae/
+```bash
+cd ~/cfae-app
+git pull
+sudo cp -r ~/cfae-app/* /var/www/cfae/
+```
 
-Once the issue is fixed, resume using the CI/CD pipeline for all deployments so that validation and safety checks remain in place.
-
+Once the issue is fixed, resume using the CI/CD pipeline so that validation and safety checks remain in place.
 
 ---
 
@@ -96,11 +122,14 @@ This redeploys the **exact commit** from that run back to production, without ma
 
 > Rollback is for stabilization. Once the issue is fixed, redeploy the latest version through the normal CI/CD pipeline.
 
+---
+
 ## 📌 Future Improvements
 
 Planned enhancements:
 
-- expand automated validation before deployment
+- expand automated validation before deployment  
 - rollback/versioning support  
 - separate environments (dev vs prod)  
-- monitoring and deployment alerts
+- monitoring and deployment alerts  
+
