@@ -51,11 +51,13 @@ jobs:
             User opc
             IdentityFile ~/.ssh/cfae_deploy_key
             StrictHostKeyChecking no" >> ~/.ssh/config
-
+      
       - name: Deploy to VM
         run: |
           ssh cfae-vm "
             cd /home/opc/cfae-app &&
-            git pull &&
+            git fetch origin &&
+            git checkout $GITHUB_SHA &&
             sudo cp -r /home/opc/cfae-app/* /var/www/cfae/
           "
+
