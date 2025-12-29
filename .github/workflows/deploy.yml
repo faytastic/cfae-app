@@ -61,7 +61,10 @@ jobs:
         run: |
           ssh cfae-vm "
             cd /home/opc/cfae-app &&
-            git pull &&
+            git fetch origin &&
+            git checkout main &&
+            git reset --hard origin/main &&
             sudo cp -r /home/opc/cfae-app/* /var/www/cfae/
           "
+
 
