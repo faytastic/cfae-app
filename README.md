@@ -84,6 +84,18 @@ Once the issue is fixed, resume using the CI/CD pipeline for all deployments so 
 
 ---
 
+## 🔁 Rollback
+
+If a deployment introduces an issue, you can roll back to a previously working version:
+
+1. Open **Actions** in GitHub  
+2. Select a **previous successful workflow run**  
+3. Click **Re-run all jobs**
+
+This redeploys the **exact commit** from that run back to production, without manual SSH.
+
+> Rollback is for stabilization. Once the issue is fixed, redeploy the latest version through the normal CI/CD pipeline.
+
 ## 📌 Future Improvements
 
 Planned enhancements:
