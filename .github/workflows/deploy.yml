@@ -17,16 +17,13 @@ jobs:
         run: |
           echo "Checking required files"
 
-          # Home page must exist
           if [ ! -f index.html ]; then
             echo "ERROR: index.html is missing"
             exit 1
           fi
 
-          # Static asset folders that commonly break
           if [ ! -d css ] && [ ! -d assets ] && [ ! -d static ]; then
             echo "WARNING: No css/assets/static folder found."
-            echo "This may be fine, but double-check your structure."
           fi
 
           echo "Basic validation passed"
@@ -40,7 +37,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
@@ -52,14 +48,13 @@ jobs:
             User opc
             IdentityFile ~/.ssh/cfae_deploy_key
             StrictHostKeyChecking no" >> ~/.ssh/config
-      
+
       - name: Deploy to VM
         run: |
           # Build version label locally
-          SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
-          sed -i "s/BUILD_VERSION/$SHORT_SHA/" index.html
+          VERSION=$(cat VERSION)
+          sed -i "s/BUILD_VERSION/$VERSION/" index.html
 
-          # Reset the repo on the VM to the correct commit
           ssh cfae-vm "
             cd /home/opc/cfae-app &&
             git fetch origin &&
@@ -67,6 +62,7 @@ jobs:
             git reset --hard origin/main
           "
 
-          # Copy ONLY web files to Nginx folder (no .git, no junk)
+          # Copy ONLY web files to Nginx folder
           scp -r index.html css assets static cfae-vm:/var/www/cfae/ 2>/dev/null || true
+
 
