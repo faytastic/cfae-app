@@ -15,9 +15,22 @@ jobs:
 
       - name: Basic project checks
         run: |
-          echo "Running simple validation"
-          test -f index.html || (echo "index.html is missing" && exit 1)
-          echo "Checks passed"
+          echo "Checking required files"
+
+          # Home page must exist
+          if [ ! -f index.html ]; then
+            echo "ERROR: index.html is missing"
+            exit 1
+          fi
+
+          # Static asset folders that commonly break
+          if [ ! -d css ] && [ ! -d assets ] && [ ! -d static ]; then
+            echo "WARNING: No css/assets/static folder found."
+            echo "This may be fine, but double-check your structure."
+          fi
+
+          echo "Basic validation passed"
+
 
   deploy:
     runs-on: ubuntu-latest
