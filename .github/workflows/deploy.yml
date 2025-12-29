@@ -40,6 +40,11 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Inject build version
+        run: |
+          SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
+          sed -i "s/BUILD_VERSION/$SHORT_SHA/" index.html
+
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
@@ -56,8 +61,7 @@ jobs:
         run: |
           ssh cfae-vm "
             cd /home/opc/cfae-app &&
-            git fetch origin &&
-            git checkout $GITHUB_SHA &&
+            git pull &&
             sudo cp -r /home/opc/cfae-app/* /var/www/cfae/
           "
 
