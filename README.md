@@ -53,7 +53,13 @@ Manual SSH should only be used for troubleshooting.
 
 ## 🔢 Versioning
 
-This project uses a simple version file to track releases.
+This project uses a VERSION file together with GitHub Releases to track and manage deployments.
+
+Releases are tagged in GitHub using semantic versioning:
+
+- Versions are created intentionally (not for every commit)
+- Releases act as restore points
+- Rollback always uses a previous release
 
 The version is also displayed at the bottom of the live webpage.
 
@@ -125,7 +131,10 @@ If a deployment introduces an issue, you can roll back to a previously working v
 2. Select a **previous successful workflow run**  
 3. Click **Re-run all jobs**
 
-This redeploys the **exact commit** from that run back to production, without manual SSH.
+This redeploys the exact release state (code, files, and config) that was live at that time. 
+
+Releases provide predictable rollback points.
+
 
 > Rollback is for stabilization. Once the issue is fixed, redeploy the latest version through the normal CI/CD pipeline.
 
@@ -135,7 +144,7 @@ This redeploys the **exact commit** from that run back to production, without ma
 ## 📌 Planned Enhancements (Next)
 
 - HTTPS support  
-- backend form handling and submission storage  
+- Backend form handling and submission storage  
 - confirmation emails to the sender  
 - optional dev vs prod environments
   
