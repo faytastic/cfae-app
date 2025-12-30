@@ -1,5 +1,9 @@
 # CFAE Web App
-Simple static web app deployed automatically using GitHub Actions on OCI, with validation before deployment.
+Live site: http://cfae.ftlgapps.com
+
+Front-end web app deployed automatically to OCI using GitHub Actions, with validation and post-deploy checks.
+
+A backend will be added later to process form submissions and send confirmations. For now, the focus is reliability, automation, and clean deployment.
 
 This is the source code for the CFAE web app.  
 It is a static site (HTML/CSS/JS) hosted on an OCI compute instance and served through Nginx.  
@@ -13,7 +17,7 @@ The code is stored in GitHub and deployed automatically using a CI/CD pipeline.
 
 Deployment is fully automated.
 
-This pipeline prevents broken or incomplete code from being deployed.
+This pipeline prevents broken or incomplete code from being deployed, and confirms the live site is healthy after deployment.
 
 When code is pushed to the `main` branch:
 
@@ -22,7 +26,8 @@ When code is pushed to the `main` branch:
 3. If the check passes, the `deploy` job connects securely to the OCI virtual machine.
 4. The VM pulls the latest code from this repository.
 5. Updated files are copied into the web directory served by Nginx: `/var/www/cfae`
-
+6. After deployment, a smoke test checks the live site and confirms the expected version is being served.
+   
 The pipeline runs on a temporary GitHub-hosted Linux runner and does not require any local setup.
 
 If the check fails, deployment stops and nothing is changed on the server.
@@ -39,8 +44,10 @@ Manual SSH should only be used for troubleshooting.
 - A **`check` job** runs first and validates the project structure
 - The **`deploy` job** runs only if `check` succeeds
 - Deployment occurs through GitHub Actions, **without manual SSH**
+- A smoke test confirms the live site is serving the new version before the deployment is considered successful.
 - If validation fails, **deployment is blocked** and the server is not changed
 - This protects the production site from accidental breaking changes and ensures that only valid builds are deployed.
+
 
 ---
 
@@ -124,12 +131,21 @@ This redeploys the **exact commit** from that run back to production, without ma
 
 ---
 
-## 📌 Future Improvements
 
-Planned enhancements:
+## 📌 Planned Enhancements (Next)
 
-- expand automated validation before deployment  
-- rollback/versioning support  
-- separate environments (dev vs prod)  
-- monitoring and deployment alerts  
+- HTTPS support  
+- backend form handling and submission storage  
+- confirmation emails to the sender  
+- optional dev vs prod environments
+  
+## 🌱 Future / Advanced Enhancements (Nice to Have)
+
+These are not required right now, but represent best-practice maturity goals:
+
+- additional automated validation before deployment  
+- deployment monitoring and alerts  
+- richer rollback visibility and deployment history  
+- centralized logging and error dashboards
+
 
