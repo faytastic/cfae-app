@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: check
     env:
-      APP_URL: http://cfae.ftlgapps.com
+      APP_URL: https://cfae.ftlgapps.com
     
     steps:
     
