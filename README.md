@@ -26,7 +26,7 @@ When code is pushed to the `main` branch:
 3. If the check passes, the `deploy` job connects securely to the OCI virtual machine.
 4. The VM pulls the latest code from this repository.
 5. Updated files are copied into the web directory served by Nginx: `/var/www/cfae`
-6. After deployment, a smoke test checks the live site and confirms the expected version is being served.
+6. After deployment, a smoke test checks the live HTTPS site and confirms the expected version is being served.
    
 The pipeline runs on a temporary GitHub-hosted Linux runner and does not require any local setup.
 
