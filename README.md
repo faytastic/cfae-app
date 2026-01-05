@@ -1,5 +1,5 @@
 # CFAE Web App
-Live site: http://cfae.ftlgapps.com
+Live site: https://cfae.ftlgapps.com
 
 Front-end web app deployed automatically to OCI using GitHub Actions, with validation and post-deploy checks.
 
@@ -90,6 +90,30 @@ Small commits that don’t change behavior don’t require a version bump.
 If needed, a deploy key can be revoked or replaced at any time.
 
 ---
+## 🔐 HTTPS / TLS Configuration
+
+The CFAE site uses full end-to-end HTTPS:
+
+- Browser → Cloudflare: encrypted  
+- Cloudflare → OCI VM (Nginx): encrypted using Let’s Encrypt
+
+Cloudflare SSL mode: **Full (Strict)**
+
+Certificates on the VM are managed by Certbot and stored at:
+
+`/etc/letsencrypt/live/cfae.ftlgapps.com/`
+
+Certificates renew automatically using:
+
+`certbot renew`
+
+Nginx is configured with a hostname so the certificate attaches properly:
+
+`server_name cfae.ftlgapps.com;`
+
+> HTTPS was implemented early so future backend features (forms, APIs, auth) are already protected.
+
+---
 
 ## 🛠 Technologies Used
 
@@ -143,18 +167,17 @@ Releases provide predictable rollback points.
 
 ## 📌 Planned Enhancements (Next)
 
-- HTTPS support  
 - Backend form handling and submission storage  
-- confirmation emails to the sender  
-- optional dev vs prod environments
+- Confirmation emails to the sender  
+- Optional dev vs prod environments
   
 ## 🌱 Future / Advanced Enhancements (Nice to Have)
 
 These are not required right now, but represent best-practice maturity goals:
 
-- additional automated validation before deployment  
-- deployment monitoring and alerts  
-- richer rollback visibility and deployment history  
-- centralized logging and error dashboards
+- Additional automated validation before deployment  
+- Deployment monitoring and alerts  
+- Richer rollback visibility and deployment history  
+- Centralized logging and error dashboards
 
 
