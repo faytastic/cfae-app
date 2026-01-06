@@ -29,5 +29,31 @@
   Version: BUILD_VERSION
 </p>
 
+  <script>
+document.querySelector("form").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const form = e.target;
+
+  const data = {
+    name: form.name.value,
+    email: form.email.value,
+    message: form.message.value
+  };
+
+  const response = await fetch("/api/contact", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
+
+  const result = await response.json();
+
+  alert(result.message || "Submitted!");
+});
+</script>
+
 </body>
 </html>
