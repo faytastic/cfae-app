@@ -34,9 +34,9 @@ jobs:
     needs: check
     env:
       APP_URL: https://cfae.ftlgapps.com
-    
+
     steps:
-    
+
       - name: Checkout repo
         uses: actions/checkout@v4
 
@@ -52,11 +52,15 @@ jobs:
             IdentityFile ~/.ssh/cfae_deploy_key
             StrictHostKeyChecking no" >> ~/.ssh/config
 
+
       - name: Deploy to VM
         run: |
-          # Build version label locally
+          # Build version label without modifying the repo file
           VERSION=$(cat VERSION)
-          sed -i "s/BUILD_VERSION/$VERSION/" index.html
+
+          # Create a temporary deployment copy
+          cp index.html index.deploy.html
+          sed -i "s/BUILD_VERSION/$VERSION/" index.deploy.html
 
           ssh cfae-vm "
             cd /home/opc/cfae-app &&
@@ -66,8 +70,9 @@ jobs:
           "
 
           # Copy ONLY web files to Nginx folder
-          scp -r index.html css assets static cfae-vm:/var/www/cfae/ 2>/dev/null || true
-     
+          scp -r index.deploy.html css assets static cfae-vm:/var/www/cfae/ 2>/dev/null || true
+
+
       - name: Verify site is serving new version
         run: |
           VERSION=$(cat VERSION)
@@ -88,4 +93,3 @@ jobs:
 
           echo "Deployment could not be verified."
           exit 1
-
