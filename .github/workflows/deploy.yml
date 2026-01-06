@@ -69,8 +69,12 @@ jobs:
             git reset --hard origin/main
           "
 
-          # Copy ONLY web files to Nginx folder
-          scp -r index.deploy.html css assets static cfae-vm:/var/www/cfae/ 2>/dev/null || true
+          # Copy deploy file as the live index
+          scp index.deploy.html cfae-vm:/var/www/cfae/index.html
+
+          # Copy static assets (if they exist)
+          scp -r css assets static cfae-vm:/var/www/cfae/ 2>/dev/null || true
+
 
 
       - name: Verify site is serving new version
