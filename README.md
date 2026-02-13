@@ -3,7 +3,8 @@ Live site: https://cfae.ftlgapps.com
 
 Front-end web app deployed automatically to OCI using GitHub Actions, with validation and post-deploy checks.
 
-A backend will be added later to process form submissions and send confirmations. For now, the focus is reliability, automation, and clean deployment.
+A backend API validates and processes form submissions and stores them in Oracle Autonomous Database.
+The frontend communicates only with the backend API and never connects directly to the database.
 
 This is the source code for the CFAE web app.  
 It is a static site (HTML/CSS/JS) hosted on an OCI compute instance and served through Nginx.  
@@ -167,9 +168,10 @@ Releases provide predictable rollback points.
 
 ## 📌 Planned Enhancements (Next)
 
-- Backend form handling and submission storage  
-- Confirmation emails to the sender  
-- Optional dev vs prod environments
+- Enhanced backend validation and rate limiting
+- Admin authentication for submissions view
+- Email notifications on submission
+
   
 ## 🌱 Future / Advanced Enhancements (Nice to Have)
 
